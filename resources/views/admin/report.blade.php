@@ -25,7 +25,14 @@
         <section class="report-period">
             <div>
                 <span>Periode</span>
-                <strong>{{ $periodLabel }}</strong>
+                <strong>
+                    @if ($period === 'custom')
+                        @php $dayCount = $startDate->copy()->startOfDay()->diffInDays($endDate->copy()->startOfDay()) + 1; @endphp
+                        {{ $dayCount }} Hari ({{ $startDate->translatedFormat('d M Y') }} – {{ $endDate->translatedFormat('d M Y') }})
+                    @else
+                        {{ $periodLabel }}
+                    @endif
+                </strong>
             </div>
             <div>
                 <span>Rentang tanggal</span>

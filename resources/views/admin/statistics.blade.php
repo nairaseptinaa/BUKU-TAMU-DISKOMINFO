@@ -9,21 +9,34 @@
             <p>{{ $periodLabel }}: {{ $startDate->translatedFormat('d F Y') }} sampai {{ $endDate->translatedFormat('d F Y') }}</p>
         </div>
 
-        <a href="{{ route('admin.statistics.print', ['period' => $period]) }}" class="btn-primary" target="_blank" rel="noopener">
+        <a href="{{ route('admin.statistics.print', ['period' => $period, 'start_date' => $startDate->toDateString(), 'end_date' => $endDate->toDateString()]) }}" class="btn-primary" target="_blank" rel="noopener">
             <i class="ph ph-printer"></i> Cetak Laporan
         </a>
     </div>
 
-    <form class="statistics-filter" method="GET" action="{{ route('admin.statistics') }}">
-        <label>
-            <span class="filter-label">Periode statistik</span>
-            <select name="period" onchange="this.form.submit()">
+    <form class="statistics-filter-wrapper" method="GET" action="{{ route('admin.statistics') }}">
+        <!-- Pilihan Dropdown Periode -->
+        <div class="filter-field-group">
+            <span class="filter-field-label">Periode statistik</span>
+            <select name="period" id="period-dropdown" class="filter-input" onchange="toggleCustomDates(this.value)">
                 <option value="last_7_days" @selected($period === 'last_7_days')>7 Hari Terakhir</option>
                 <option value="this_month" @selected($period === 'this_month')>Bulan Ini</option>
                 <option value="last_month" @selected($period === 'last_month')>Bulan Lalu</option>
+                <option value="custom" @selected($period === 'custom')>Rentang Kustom (Pilih Tanggal)</option>
             </select>
-        </label>
-        <noscript><button type="submit" class="btn-primary">Terapkan</button></noscript>
+        </div>
+        <!-- Input Tanggal Mulai & Akhir -->
+        <div id="custom-date-fields" class="custom-date-group {{ $period === 'custom' ? 'custom-date-visible' : 'custom-date-hidden' }}">
+            <div class="filter-field-group">
+                <span class="filter-field-label">Dari Tanggal</span>
+                <input type="date" name="start_date" class="filter-input" value="{{ $startDate->toDateString() }}">
+            </div>
+            <div class="filter-field-group">
+                <span class="filter-field-label">Sampai Tanggal</span>
+                <input type="date" name="end_date" class="filter-input" value="{{ $endDate->toDateString() }}">
+            </div>
+        </div>
+        <button type="submit" class="btn-primary">Terapkan</button>
     </form>
 
     <div class="insight-grid">
@@ -208,5 +221,17 @@
             },
         });
     })();
+    function toggleCustomDates(value) {
+        const customFields = document.getElementById('custom-date-fields');
+        if (value === 'custom') {
+            customFields.classList.remove('custom-date-hidden');
+            customFields.classList.add('custom-date-visible');
+        } else {
+            customFields.classList.remove('custom-date-visible');
+            customFields.classList.add('custom-date-hidden');
+            // Langsung submit form jika memilih opsi instan
+            document.querySelector('.statistics-filter-wrapper').submit();
+        }
+    }
 </script>
 @endpush

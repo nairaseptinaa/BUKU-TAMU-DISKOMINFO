@@ -14,17 +14,19 @@ class StatisticController extends Controller
     public function index(Request $request): View
     {
         $period = $this->normalizePeriod((string) $request->input('period', $request->input('chart_period', 'last_7_days')));
-        $statistics = $this->buildStatistics($period);
+        $statistics = $this->buildStatistics($period, $request);
 
         return view('admin.statistics', array_merge($statistics, [
-            'period' => $period,
+            'period'     => $period,
+            'start_date' => $request->input('start_date', $statistics['startDate']->toDateString()),
+            'end_date'   => $request->input('end_date', $statistics['endDate']->toDateString()),
         ]));
     }
 
     public function printReport(Request $request): View
     {
         $period = $this->normalizePeriod((string) $request->input('period', $request->input('chart_period', 'last_7_days')));
-        $statistics = $this->buildStatistics($period);
+        $statistics = $this->buildStatistics($period, $request);
 
         $guests = Guestbook::query()
             ->with(['department', 'serviceType'])
@@ -33,15 +35,15 @@ class StatisticController extends Controller
             ->get();
 
         return view('admin.report', array_merge($statistics, [
-            'period' => $period,
-            'guests' => $guests,
+            'period'      => $period,
+            'guests'      => $guests,
             'generatedAt' => Carbon::now(),
         ]));
     }
 
     private function normalizePeriod(string $period): string
     {
-        return in_array($period, ['last_7_days', 'this_month', 'last_month'], true)
+        return in_array($period, ['last_7_days', 'this_month', 'last_month', 'custom'], true)
             ? $period
             : 'last_7_days';
     }
@@ -51,10 +53,10 @@ class StatisticController extends Controller
      *
      * @return array<string, mixed>
      */
-    private function buildStatistics(string $period): array
+    private function buildStatistics(string $period, Request $request): array
     {
         Carbon::setLocale('id');
-        [$startDate, $endDate, $periodLabel] = $this->resolvePeriod($period);
+        [$startDate, $endDate, $periodLabel] = $this->resolvePeriod($period, $request);
 
         $dailyCounts = Guestbook::query()
             ->selectRaw('DATE(visit_date) as visit_day, COUNT(*) as total')
@@ -111,9 +113,30 @@ class StatisticController extends Controller
     /**
      * @return array{0: Carbon, 1: Carbon, 2: string}
      */
-    private function resolvePeriod(string $period): array
+    private function resolvePeriod(string $period, Request $request): array
     {
         $now = Carbon::now();
+
+        if ($period === 'custom') {
+            try {
+                $startDate = $request->filled('start_date') 
+                    ? Carbon::parse($request->input('start_date'))->startOfDay() 
+                    : $now->copy()->subDays(6)->startOfDay();
+                    
+                $endDate = $request->filled('end_date') 
+                    ? Carbon::parse($request->input('end_date'))->endOfDay() 
+                    : $now->copy()->endOfDay();
+            } catch (\Exception $e) {
+                $startDate = $now->copy()->subDays(6)->startOfDay();
+                $endDate = $now->copy()->endOfDay();
+            }
+
+            return [
+                $startDate,
+                $endDate,
+                'Periode Kustom',
+            ];
+        }
 
         return match ($period) {
             'this_month' => [
