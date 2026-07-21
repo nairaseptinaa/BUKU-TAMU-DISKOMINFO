@@ -14,7 +14,7 @@
     <div class="admin-layout">
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="{{ asset('img/logokominfo.png') }}" alt="Logo Kominfo">
+                <img src="{{ asset('img/Lambang_Kabupaten_Lumajang.png') }}" alt="Logo Kominfo">
                 <div class="sidebar-brand-title">BUKU TAMU</div>
                 <div class="sidebar-brand-subtitle">Dinas Komunikasi & Informatika</div>
             </div>
