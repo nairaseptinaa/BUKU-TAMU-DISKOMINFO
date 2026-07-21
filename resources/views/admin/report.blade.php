@@ -15,7 +15,7 @@
 
     <main class="report-page">
         <header class="report-header">
-            <img src="{{ asset('img/logokominfo.png') }}" alt="Logo Kominfo" class="report-logo">
+            <img src="{{ asset('img/Lambang_Kabupaten_Lumajang.png') }}" alt="Logo Kominfo" class="report-logo">
             <div>
                 <h1>Laporan Kunjungan Buku Tamu</h1>
                 <p>Dinas Komunikasi dan Informatika</p>
