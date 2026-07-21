@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Guestbook extends Model
 {
@@ -19,19 +18,12 @@ class Guestbook extends Model
         'feedback',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'visit_date' => 'datetime',
-        ];
-    }
-
-    public function department(): BelongsTo
+    public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
 
-    public function serviceType(): BelongsTo
+    public function serviceType()
     {
         return $this->belongsTo(ServiceType::class, 'service_type_id');
     }
