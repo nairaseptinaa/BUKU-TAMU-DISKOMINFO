@@ -96,23 +96,15 @@
                     <tr>
                         <th>Tanggal</th>
                         <th>Jumlah Tamu</th>
-                        <th>Kontribusi terhadap Periode</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($dailyReport as $row)
-                        @php
-                            $dailyPercentage = $totalGuests > 0 ? ($row->total / $totalGuests) * 100 : 0;
-                        @endphp
                         <tr>
                             <td>{{ $row->fullLabel }}</td>
                             <td><strong>{{ number_format($row->total) }}</strong> orang</td>
-                            <td>{{ number_format($dailyPercentage, 1, ',', '.') }}%</td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="3" class="empty-state">Belum ada data pada periode ini.</td>
-                        </tr>
                     @endforelse
                 </tbody>
             </table>
