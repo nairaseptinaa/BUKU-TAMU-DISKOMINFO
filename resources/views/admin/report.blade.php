@@ -130,8 +130,9 @@
                         <th>Nama</th>
                         <th>Jenis</th>
                         <th>PD/Unit atau Instansi</th>
-                        <th>Layanan</th>
+                        <th>Tujuan Kunjungan</th>
                         <th>Kontak</th>
+                        <th>Saran/Kritik</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -155,10 +156,11 @@
                             </td>
                             <td>{{ $guest->serviceType?->service_name ?? '-' }}</td>
                             <td>{{ $guest->phone_number ?: '-' }}</td>
+                            <td>{{ $guest->feedback ?: '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="report-empty">Tidak ada data kunjungan pada periode ini.</td>
+                            <td colspan="8" class="report-empty">Tidak ada data kunjungan pada periode ini.</td>
                         </tr>
                     @endforelse
                 </tbody>

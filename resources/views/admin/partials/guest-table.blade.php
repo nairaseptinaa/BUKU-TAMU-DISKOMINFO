@@ -16,6 +16,7 @@
                 <th>PD/Unit Kerja</th>
                 <th>Jenis Layanan</th>
                 <th>Tanggal Kunjungan</th>
+                <th>Kritik Dan Saran</th>
             </tr>
         </thead>
         <tbody>
@@ -40,10 +41,17 @@
                     <td>{{ $guest->department?->department_name ?? '-' }}</td>
                     <td>{{ $guest->serviceType?->service_name ?? '-' }}</td>
                     <td>{{ $guest->visit_date ? \Carbon\Carbon::parse($guest->visit_date)->translatedFormat('d M Y, H:i') : '-' }}</td>
+                    <td>
+                        @if ($guest->feedback)
+                            <span title="{{ $guest->feedback }}">{{ \Illuminate\Support\Str::limit($guest->feedback, 40) }}</span>
+                        @else
+                            <span style="color:#94a3b8">-</span>
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="empty-state">
+                    <td colspan="8" class="empty-state">
                         <i class="ph ph-magnifying-glass"></i>
                         <strong>Data tamu tidak ditemukan</strong>
                         <span>Coba ubah kata pencarian atau filter periode.</span>
