@@ -17,6 +17,7 @@
                 <th>Jenis Layanan</th>
                 <th>Tanggal Kunjungan</th>
                 <th>Kritik Dan Saran</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -48,10 +49,32 @@
                             <span style="color:#94a3b8">-</span>
                         @endif
                     </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ route('admin.guests.edit', $guest) }}" class="btn-search btn-edit">
+                                <i class="ph ph-pencil"></i> Edit
+                            </a>
+
+                            <form
+                                method="POST"
+                                action="{{ route('admin.guests.destroy', $guest) }}"
+                                data-confirm-title="Hapus data tamu?"
+                                data-confirm="Data kunjungan “{{ $guest->name }}” akan dihapus permanen. Tindakan ini tidak dapat dibatalkan."
+                                data-confirm-button="Ya, Hapus"
+                                data-confirm-tone="danger"
+                            >
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-delete">
+                                    <i class="ph ph-trash"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="empty-state">
+                    <td colspan="9" class="empty-state">
                         <i class="ph ph-magnifying-glass"></i>
                         <strong>Data tamu tidak ditemukan</strong>
                         <span>Coba ubah kata pencarian atau filter periode.</span>

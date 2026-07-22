@@ -19,7 +19,10 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 
 // ===== DASHBOARD ADMIN (Wajib Login) =====
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function (): void {
-    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/tamu/{guest}/edit', [AdminController::class, 'editGuest'])->name('admin.guests.edit');
+    Route::put('/admin/tamu/{guest}', [AdminController::class, 'updateGuest'])->name('admin.guests.update');
+    Route::delete('/admin/tamu/{guest}', [AdminController::class, 'destroyGuest'])->name('admin.guests.destroy');
     Route::post('/update-skm', [AdminController::class, 'updateSkm'])->name('update-skm');
     Route::get('/pengaturan', [AdminController::class, 'settings'])->name('settings');
 
