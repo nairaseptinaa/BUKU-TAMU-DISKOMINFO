@@ -145,7 +145,7 @@ class AdminController extends Controller
             'visitor_type' => 'required|in:internal,external',
             'department_id' => 'nullable|required_if:visitor_type,internal|exists:departments,id',
             'external_agency' => 'nullable|required_if:visitor_type,external|string|max:150',
-            'phone_number' => 'nullable|string|max:20',
+            'phone_number' => ['nullable', 'regex:/^[0-9+\-\s]+$/', 'max:20'],
             'service_type_id' => 'required|exists:service_types,id',
             'feedback' => 'nullable|string',
         ]);
